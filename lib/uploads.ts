@@ -54,10 +54,11 @@ export async function uploadImageToStorage(params: {
     .update(signaturePayload)
     .digest("hex");
 
+  const uploadBytes = new Uint8Array(params.bytes);
   const form = new FormData();
   form.append(
     "file",
-    new Blob([params.bytes], { type: params.mimeType }),
+    new Blob([uploadBytes], { type: params.mimeType }),
     params.filename
   );
   form.append("api_key", config.apiKey);
