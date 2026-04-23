@@ -337,22 +337,14 @@ export default function ProfileForm(props: Props) {
         </Field>
 
         <Field label="User Photo">
-          <input
-            type="file"
-            accept="image/png,image/jpeg,image/webp"
-            className="mt-2 block w-full text-sm text-white/70"
-            onChange={async (e) => {
-              const input = e.currentTarget;
-              const f = input.files?.[0];
-              if (!f) return;
-              await onPickImage(f, "photo", () => {
-                input.value = "";
-              });
+          <UploadPicker
+            id="profile-photo"
+            label={form.photoUrl ? "Replace photo" : "Choose photo"}
+            uploading={uploadingPhoto}
+            onPick={async (file, clearInput) => {
+              await onPickImage(file, "photo", clearInput);
             }}
           />
-          {uploadingPhoto && (
-            <div className="mt-2 text-xs text-white/50">Uploading...</div>
-          )}
           {form.photoUrl && (
             <img
               src={form.photoUrl}
@@ -364,22 +356,14 @@ export default function ProfileForm(props: Props) {
         </Field>
 
         <Field label="Company Logo">
-          <input
-            type="file"
-            accept="image/png,image/jpeg,image/webp"
-            className="mt-2 block w-full text-sm text-white/70"
-            onChange={async (e) => {
-              const input = e.currentTarget;
-              const f = input.files?.[0];
-              if (!f) return;
-              await onPickImage(f, "logo", () => {
-                input.value = "";
-              });
+          <UploadPicker
+            id="company-logo"
+            label={form.companyLogoUrl ? "Replace logo" : "Choose logo"}
+            uploading={uploadingLogo}
+            onPick={async (file, clearInput) => {
+              await onPickImage(file, "logo", clearInput);
             }}
           />
-          {uploadingLogo && (
-            <div className="mt-2 text-xs text-white/50">Uploading...</div>
-          )}
           {form.companyLogoUrl && (
             <div className="mt-3 inline-flex rounded-2xl border border-white/15 bg-white p-3 shadow-sm">
               <img
@@ -447,6 +431,48 @@ export default function ProfileForm(props: Props) {
           </button>
         )}
       </div>
+    </div>
+  );
+}
+
+function UploadPicker({
+  id,
+  label,
+  uploading,
+  onPick,
+}: {
+  id: string;
+  label: string;
+  uploading: boolean;
+  onPick: (file: File, clearInput: () => void) => Promise<void>;
+}) {
+  return (
+    <div className="mt-2">
+      <input
+        id={id}
+        type="file"
+        accept="image/png,image/jpeg,image/webp"
+        className="sr-only"
+        disabled={uploading}
+        onChange={async (e) => {
+          const input = e.currentTarget;
+          const file = input.files?.[0];
+          if (!file) return;
+          await onPick(file, () => {
+            input.value = "";
+          });
+        }}
+      />
+      <label
+        htmlFor={id}
+        className={`inline-flex cursor-pointer items-center justify-center rounded-xl border border-white/15 px-4 py-3 text-sm font-semibold text-white transition ${
+          uploading
+            ? "bg-white/10 opacity-60"
+            : "bg-white/10 hover:border-blue-400/60 hover:bg-blue-500/20"
+        }`}
+      >
+        {uploading ? "Uploading..." : label}
+      </label>
     </div>
   );
 }

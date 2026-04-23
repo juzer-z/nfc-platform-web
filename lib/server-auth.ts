@@ -87,15 +87,22 @@ export function validateSameOrigin(req: Request) {
   const requestUrl = new URL(req.url);
   const originHeader = req.headers.get("origin");
   const refererHeader = req.headers.get("referer");
+  const forwardedHost = req.headers.get("x-forwarded-host") || req.headers.get("host");
+  const forwardedProto = req.headers.get("x-forwarded-proto") || requestUrl.protocol.replace(":", "");
+  const forwardedOrigin = forwardedHost ? `${forwardedProto}://${forwardedHost}` : null;
+  const allowedOrigins = new Set(
+    [requestUrl.origin, forwardedOrigin, process.env.APP_BASE_URL?.replace(/\/+$/, "")]
+      .filter((origin): origin is string => Boolean(origin))
+  );
 
   if (originHeader) {
     const origin = new URL(originHeader);
-    if (origin.origin !== requestUrl.origin) {
+    if (!allowedOrigins.has(origin.origin)) {
       return NextResponse.json({ error: "Invalid origin" }, { status: 403 });
     }
   } else if (refererHeader) {
     const referer = new URL(refererHeader);
-    if (referer.origin !== requestUrl.origin) {
+    if (!allowedOrigins.has(referer.origin)) {
       return NextResponse.json({ error: "Invalid referer" }, { status: 403 });
     }
   } else {
