@@ -7,6 +7,10 @@ import { useRouter } from "next/navigation";
 
 type Profile = PrismaProfile;
 
+type ProfileFormState = Omit<Profile, "id"> & {
+  id?: string;
+};
+
 type MutationError = {
   error?: string;
 };
@@ -31,7 +35,7 @@ const MAX_LOGO_BYTES = 200 * 1024; // 200KB
 export default function ProfileForm(props: Props) {
   const router = useRouter();
 
-  const [form, setForm] = useState<Profile>(() => ({
+  const [form, setForm] = useState<ProfileFormState>(() => ({
     id: props.mode === "edit" ? props.initial.id : undefined,
     slug: props.initial?.slug ?? "",
     fullName: props.initial?.fullName ?? "",
@@ -60,7 +64,10 @@ export default function ProfileForm(props: Props) {
   const [uploadingLogo, setUploadingLogo] = useState(false);
   const [deleting, setDeleting] = useState(false);
 
-  function update<K extends keyof Profile>(key: K, value: Profile[K]) {
+  function update<K extends keyof ProfileFormState>(
+    key: K,
+    value: ProfileFormState[K]
+  ) {
     setForm((prev) => ({ ...prev, [key]: value }));
   }
 
