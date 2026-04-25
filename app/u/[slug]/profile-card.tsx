@@ -151,9 +151,9 @@ export default function ProfileCard({
           <div className="rounded-[28px] border border-white/12 bg-white/6 shadow-[0_25px_80px_rgba(0,0,0,0.55)] backdrop-blur-2xl overflow-hidden">
             <div className="p-6">
               {/* Header */}
-              <div className="flex items-start gap-4">
+              <div className="flex items-start gap-3 sm:gap-4">
                 {/* Photo */}
-                <div className="h-[68px] w-[68px] rounded-2xl overflow-hidden bg-white/8 border border-white/12 flex items-center justify-center shadow-inner shrink-0">
+                <div className="h-[82px] w-[82px] rounded-[22px] overflow-hidden bg-white/8 border border-white/12 flex items-center justify-center shadow-[inset_0_1px_0_rgba(255,255,255,0.08),0_12px_28px_rgba(0,0,0,0.28)] shrink-0 sm:h-[92px] sm:w-[92px]">
                   {photoUrl ? (
                     // eslint-disable-next-line @next/next/no-img-element
                     <img
@@ -162,20 +162,20 @@ export default function ProfileCard({
                       className="h-full w-full object-cover"
                     />
                   ) : (
-                    <span className="text-2xl font-semibold">
+                    <span className="text-3xl font-semibold sm:text-4xl">
                       {name?.slice(0, 1)?.toUpperCase()}
                     </span>
                   )}
                 </div>
 
                 {/* Name + meta */}
-                <div className="min-w-0 flex-1">
-                  <div className="text-[22px] font-semibold leading-tight truncate">
+                <div className="min-w-0 flex-1 pt-1 sm:pt-2">
+                  <div className="text-[24px] font-semibold leading-[1.05] tracking-[-0.02em] sm:text-[28px] truncate">
                     {name}
                   </div>
 
                   {(title || company) && (
-                    <div className="mt-1 text-white/70 text-[13px] leading-snug">
+                    <div className="mt-2 text-white/70 text-[13px] leading-snug sm:text-[14px]">
                       <div className="truncate">{title}</div>
                       <div className="truncate">{company}</div>
                     </div>
@@ -184,8 +184,8 @@ export default function ProfileCard({
 
                 {/* Company Logo (new) */}
                 {companyLogoUrl ? (
-                  <div className="shrink-0">
-                    <div className="flex h-16 w-16 items-center justify-center rounded-2xl border border-white/20 bg-white p-2 shadow-[0_10px_30px_rgba(0,0,0,0.18)]">
+                  <div className="shrink-0 pt-1 sm:pt-2">
+                    <div className="flex h-14 w-14 items-center justify-center rounded-[20px] border border-white/20 bg-white p-2 shadow-[0_10px_30px_rgba(0,0,0,0.18)] sm:h-16 sm:w-16">
                       {/* eslint-disable-next-line @next/next/no-img-element */}
                       <img
                         src={companyLogoUrl}
